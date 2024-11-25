@@ -1,6 +1,6 @@
 "use client";
 
-import { processImages, generateImageList } from "@/lib/imageProcessing";
+import { processImages } from "@/lib/imageProcessing";
 
 interface Props {
   selectedFiles: File[];
