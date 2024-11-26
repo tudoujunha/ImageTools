@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { processImages } from "@/lib/imageProcessing";
 
 interface Props {
@@ -10,6 +11,31 @@ interface Props {
 }
 
 export function ActionButtons({ selectedFiles, outputMode, onStatusChange, basePath }: Props) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="flex gap-4">
+        <button
+          disabled
+          className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg opacity-50"
+        >
+          生成图片列表
+        </button>
+        <button
+          disabled
+          className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg opacity-50"
+        >
+          切割图片
+        </button>
+      </div>
+    );
+  }
+
   const handleGenerateList = async () => {
     if (selectedFiles.length === 0) {
       onStatusChange("请先选择文件！");
@@ -50,13 +76,13 @@ export function ActionButtons({ selectedFiles, outputMode, onStatusChange, baseP
   };
 
   const handleSplitImages = async () => {
-    if (selectedFiles.length === 0) {
-      onStatusChange("请先选择文件！");
+    if (selectedFiles.length === 0 && !basePath.startsWith('data:image/')) {
+      onStatusChange("请先选择文件或输入有效的Base64图片数据！");
       return;
     }
 
     try {
-      const result = await processImages(selectedFiles);
+      const result = await processImages(selectedFiles, basePath);
       onStatusChange(result.message);
     } catch (error: unknown) {
       onStatusChange(`处理图片失败: ${error instanceof Error ? error.message : String(error)}`);
@@ -74,7 +100,7 @@ export function ActionButtons({ selectedFiles, outputMode, onStatusChange, baseP
       </button>
       <button
         onClick={handleSplitImages}
-        disabled={selectedFiles.length === 0}
+        disabled={selectedFiles.length === 0 && !basePath.startsWith('data:image/')}
         className="flex-1 px-4 py-2 bg-green-500 text-white rounded-lg disabled:opacity-50"
       >
         切割图片
