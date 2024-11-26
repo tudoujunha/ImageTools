@@ -16,7 +16,6 @@ export function PathInput({ path, onPathChange }: Props) {
   }, []);
 
   useEffect(() => {
-    // 当path是base64时，自动折叠输入框
     if (path.startsWith('data:image/')) {
       setIsCollapsed(true);
     } else {
@@ -29,12 +28,43 @@ export function PathInput({ path, onPathChange }: Props) {
     setIsCollapsed(false);
   };
 
+  const handlePaste = async (e: React.ClipboardEvent) => {
+    e.preventDefault();
+
+    const items = e.clipboardData.items;
+    
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          try {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const base64 = e.target?.result as string;
+              onPathChange(base64);
+            };
+            reader.readAsDataURL(file);
+            return;
+          } catch (error) {
+            console.error('图片转换失败:', error);
+          }
+        }
+      }
+    }
+
+    const text = e.clipboardData.getData('text');
+    onPathChange(text);
+  };
+
   const isBase64 = path.startsWith('data:image/');
 
   if (!isMounted) {
     return (
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-600">图片所在目录的绝对路径或Base64图片数据</label>
+        <label className="text-sm text-gray-600">
+          图片所在目录的绝对路径或Base64图片数据
+          <span className="ml-2 text-gray-400">(支持直接粘贴图片)</span>
+        </label>
         <input
           disabled
           type="text"
@@ -49,6 +79,7 @@ export function PathInput({ path, onPathChange }: Props) {
     <div className="flex flex-col gap-2">
       <label className="text-sm text-gray-600">
         图片所在目录的绝对路径或Base64图片数据
+        <span className="ml-2 text-gray-400">(支持直接粘贴图片)</span>
       </label>
       {isCollapsed ? (
         <div className="flex items-center gap-2 p-2 bg-blue-50 rounded-lg">
@@ -74,7 +105,8 @@ export function PathInput({ path, onPathChange }: Props) {
             type="text"
             value={path}
             onChange={(e) => onPathChange(e.target.value)}
-            placeholder="支持：1. 目录路径，如 D:\Images  2. Base64图片数据，如 data:image/png;base64,..."
+            onPaste={handlePaste}
+            placeholder="支持：1. 目录路径  2. Base64图片数据  3. 直接粘贴图片"
             className={`w-full px-4 py-2 border rounded-lg ${
               isBase64 ? 'bg-blue-50' : ''
             }`}
