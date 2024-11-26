@@ -22,7 +22,7 @@ export default function Home() {
     return (
       <div className="min-h-screen p-8 flex flex-col gap-6 max-w-3xl mx-auto opacity-50">
         <header className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">图片路径生成工具</h1>
+          <h1 className="text-2xl font-bold">图片工具箱</h1>
         </header>
         <div className="animate-pulse">
           <div className="h-10 bg-gray-200 rounded w-full"></div>
@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <div className="min-h-screen p-8 flex flex-col gap-6 max-w-3xl mx-auto">
       <header className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">图片路径生成工具</h1>
+        <h1 className="text-2xl font-bold">图片工具箱</h1>
       </header>
 
       <PathInput path={basePath} onPathChange={setBasePath} />

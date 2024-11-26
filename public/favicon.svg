@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="32" height="32" rx="6" fill="#22C55E"/>
+  
+  <!-- 图片切割图案 -->
+  <path d="M7 7h8v8H7V7z" fill="white" opacity="0.9"/>
+  <path d="M17 7h8v8h-8V7z" fill="white" opacity="0.8"/>
+  <path d="M7 17h8v8H7v-8z" fill="white" opacity="0.8"/>
+  <path d="M17 17h8v8h-8v-8z" fill="white" opacity="0.9"/>
+  
+  <!-- 切割线 -->
+  <path d="M16 6v20" stroke="white" stroke-width="1" stroke-dasharray="2 1"/>
+  <path d="M6 16h20" stroke="white" stroke-width="1" stroke-dasharray="2 1"/>
+</svg> 
