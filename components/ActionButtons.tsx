@@ -48,7 +48,13 @@ export function ActionButtons({ selectedFiles, outputMode, onStatusChange, baseP
     }
 
     try {
-      const fileList = selectedFiles.map(file => ({
+      const sortedFiles = Array.from(selectedFiles).sort((a, b) => {
+        const numA = parseInt(a.name.match(/\d+/g)?.pop() || '0');
+        const numB = parseInt(b.name.match(/\d+/g)?.pop() || '0');
+        return numA - numB;
+      });
+
+      const fileList = sortedFiles.map(file => ({
         absolute_path: `${basePath.replace(/\\/g, '/')}/${file.name}`,
         filename: file.name
       }));
