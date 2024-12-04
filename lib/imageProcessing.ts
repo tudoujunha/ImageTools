@@ -2,14 +2,14 @@ const isBrowser = typeof window !== 'undefined';
 
 function getTimeStamp(): string {
   const now = new Date();
-  return now.toLocaleString('zh-CN', {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  }).replace(/[/:]/g, '').replace(', ', '_');
+  const year = now.getFullYear().toString().slice(-2);
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+  const hour = now.getHours().toString().padStart(2, '0');
+  const minute = now.getMinutes().toString().padStart(2, '0');
+  const second = now.getSeconds().toString().padStart(2, '0');
+  
+  return `${year}${month}${day}_${hour}${minute}${second}`;
 }
 
 export async function generateImageList(
@@ -82,7 +82,7 @@ async function base64ToFile(base64String: string): Promise<File | null> {
     const blob = new Blob([new Uint8Array(byteArrays)], { type: mimeType });
 
     // 创建File对象
-    return new File([blob], `base64_image.${mimeType.split('/')[1]}`, { type: mimeType });
+    return new File([blob], `split.${mimeType.split('/')[1]}`, { type: mimeType });
   } catch (error) {
     console.error('Base64转换失败:', error);
     return null;
@@ -149,7 +149,7 @@ export async function processImages(files: File[], basePath?: string) {
           const a = document.createElement('a');
           const fileName = file.name.replace(/\.[^/.]+$/, '');
           a.href = url;
-          a.download = `${getTimeStamp()}_${fileName}_${quarter.name}.png`;
+          a.download = `Image_${getTimeStamp()}_${fileName}_${quarter.name}.png`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
