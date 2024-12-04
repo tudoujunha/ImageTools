@@ -1,5 +1,17 @@
 const isBrowser = typeof window !== 'undefined';
 
+function getTimeStamp(): string {
+  const now = new Date();
+  return now.toLocaleString('zh-CN', {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).replace(/[/:]/g, '').replace(', ', '_');
+}
+
 export async function generateImageList(
   files: File[],
   outputMode: "clipboard" | "file"
@@ -137,7 +149,7 @@ export async function processImages(files: File[], basePath?: string) {
           const a = document.createElement('a');
           const fileName = file.name.replace(/\.[^/.]+$/, '');
           a.href = url;
-          a.download = `${fileName}_${quarter.name}.png`;
+          a.download = `${getTimeStamp()}_${fileName}_${quarter.name}.png`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
